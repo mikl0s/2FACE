@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>2FACE</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+  <!-- Load dependencies first -->
+  <script src="crypto.js"></script>
+  <script src="hmac-sha1.js"></script>
+  <script src="jsOTP.js"></script>
+  <!-- Then load our modular code -->
+  <script src="popup.js" type="module"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle Theme">🌙</button>
+      <button id="totpButton" class="totp-button" title="Manage TOTP Secrets">🏛️</button>
+      <button id="settingsButton" class="settings-button" title="Settings & PIN">⚙️</button>
+    </div>
+    <div id="totpList" role="list" aria-label="TOTP codes">
+      <!-- TOTP list will be rendered here -->
+    </div>
+  </div>
+</body>
+</html>
