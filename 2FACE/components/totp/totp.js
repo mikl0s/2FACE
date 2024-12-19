@@ -44,10 +44,10 @@ export function openTotpModal() {
   const modal = createModal(content);
 
   // Load and display secrets
-  chrome.storage.sync.get(['secrets'], (result) => {
+  chrome.storage.sync.get(['secrets'], result => {
     const secretList = modal.querySelector('#secretList');
     const secrets = result.secrets || [];
-    
+
     secrets.forEach((secret, index) => {
       const div = document.createElement('div');
       div.classList.add('totp-item');
@@ -72,12 +72,16 @@ export function openTotpModal() {
             <div class="input-group">
               <span class="input-icon" title="URL Filters">🌐</span>
               <div class="tag-container">
-                ${(secret.urlFilters || []).map(filter => `
+                ${(secret.urlFilters || [])
+                  .map(
+                    filter => `
                   <span class="tag">
                     ${filter}
                     <span class="tag-remove" data-tag="${filter}">×</span>
                   </span>
-                `).join('')}
+                `
+                  )
+                  .join('')}
                 <input type="text" class="tag-input" placeholder="Type URL filter and press Enter" />
               </div>
             </div>
@@ -95,7 +99,7 @@ export function openTotpModal() {
       const tagInput = tagContainer.querySelector('.tag-input');
       const tags = new Set(secret.urlFilters || []);
 
-      tagInput.addEventListener('keydown', (e) => {
+      tagInput.addEventListener('keydown', e => {
         if (e.key === 'Enter' && tagInput.value.trim()) {
           e.preventDefault();
           const tag = tagInput.value.trim();
@@ -113,7 +117,7 @@ export function openTotpModal() {
         }
       });
 
-      tagContainer.addEventListener('click', (e) => {
+      tagContainer.addEventListener('click', e => {
         if (e.target.classList.contains('tag-remove')) {
           const tag = e.target.dataset.tag;
           tags.delete(tag);
@@ -169,7 +173,7 @@ export function openTotpModal() {
   const tags = new Set();
 
   const tagInput = addForm.querySelector('.tag-input');
-  tagInput.addEventListener('keydown', (e) => {
+  tagInput.addEventListener('keydown', e => {
     if (e.key === 'Enter' && tagInput.value.trim()) {
       e.preventDefault();
       const tag = tagInput.value.trim();
@@ -187,7 +191,7 @@ export function openTotpModal() {
     }
   });
 
-  addForm.querySelector('.tag-container').addEventListener('click', (e) => {
+  addForm.querySelector('.tag-container').addEventListener('click', e => {
     if (e.target.classList.contains('tag-remove')) {
       const tag = e.target.dataset.tag;
       tags.delete(tag);
@@ -201,7 +205,7 @@ export function openTotpModal() {
     const urlFilters = Array.from(tags);
 
     if (name && secret) {
-      chrome.storage.sync.get(['secrets'], (result) => {
+      chrome.storage.sync.get(['secrets'], result => {
         const secrets = result.secrets || [];
         secrets.push({ name, secret, urlFilters });
         chrome.storage.sync.set({ secrets }, () => {

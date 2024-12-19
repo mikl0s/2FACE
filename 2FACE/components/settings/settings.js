@@ -57,12 +57,12 @@ export function openSettingsModal() {
   const currentPinContainer = modal.querySelector('#currentPinContainer');
   const newPinContainer = modal.querySelector('#newPinContainer');
   const confirmPinContainer = modal.querySelector('#confirmPinContainer');
-  
+
   // Create PIN inputs
   const currentPinInput = pinManager.createPinInput();
   const newPinInput = pinManager.createPinInput();
   const confirmPinInput = pinManager.createPinInput();
-  
+
   currentPinContainer.appendChild(currentPinInput);
   newPinContainer.appendChild(newPinInput);
   confirmPinContainer.appendChild(confirmPinInput);
@@ -96,7 +96,7 @@ export function openSettingsModal() {
       return;
     }
 
-    chrome.storage.sync.get(['hashedPin'], async (result) => {
+    chrome.storage.sync.get(['hashedPin'], async result => {
       if (!result.hashedPin || verifyResult.success) {
         await pinManager.setPin(newPin);
         pinMessage.textContent = 'PIN set successfully';
@@ -117,7 +117,7 @@ export function openSettingsModal() {
 
   removePinButton.addEventListener('click', async () => {
     const currentPin = pinManager.getFullPin(currentPinInput);
-    
+
     const verifyResult = await pinManager.verifyPin(currentPin);
     if (!verifyResult.success && verifyResult.locked) {
       pinMessage.textContent = `Too many attempts. Locked for ${Math.ceil(verifyResult.remainingTime / 60)} minutes.`;
@@ -125,7 +125,7 @@ export function openSettingsModal() {
       return;
     }
 
-    chrome.storage.sync.get(['hashedPin'], async (result) => {
+    chrome.storage.sync.get(['hashedPin'], async result => {
       if (!result.hashedPin || verifyResult.success) {
         await pinManager.removePin();
         pinMessage.textContent = 'PIN removed successfully';
@@ -148,6 +148,8 @@ export function openSettingsModal() {
     const isLightMode = document.body.classList.contains('light-mode');
     document.body.classList.toggle('light-mode', !isLightMode);
     chrome.storage.sync.set({ darkMode: isLightMode });
-    toggleDarkMode.textContent = !isLightMode ? '🌙 Switch to Dark Mode' : '🌞 Switch to Light Mode';
+    toggleDarkMode.textContent = !isLightMode
+      ? '🌙 Switch to Dark Mode'
+      : '🌞 Switch to Light Mode';
   });
 }

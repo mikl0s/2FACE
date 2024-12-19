@@ -7,7 +7,7 @@ export function createModal(content) {
       ${content}
     </div>
   `;
-  
+
   document.body.appendChild(modal);
   // Trigger animation after modal is added to DOM
   requestAnimationFrame(() => modal.classList.add('show'));
