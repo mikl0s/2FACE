@@ -49,28 +49,55 @@ Planned:
    - Handle interactions
 
 ### Component Architecture
-PIN Input:
+### Component Architecture
+Header Section:
 ```html
-<div class="pin-input-container">
-  <input type="text" maxlength="1" class="pin-digit" />
-  <input type="text" maxlength="1" class="pin-digit" />
-  <input type="text" maxlength="1" class="pin-digit" />
-  <input type="text" maxlength="1" class="pin-digit" />
+<div class="header">
+  <div class="search-container">
+    <input type="text" class="search-input" placeholder="Search services and tags..." />
+  </div>
+  <div class="header-actions">
+    <button class="header-button add-button" title="Add New TOTP">
+      <span class="button-icon">+</span>
+    </button>
+    <button class="header-button theme-button" title="Toggle Theme">
+      <span class="button-icon">☀️</span>
+    </button>
+    <button class="header-button settings-button" title="Settings">
+      <span class="button-icon">⚙️</span>
+    </button>
+  </div>
 </div>
 ```
 
-TOTP Management:
+TOTP Card:
 ```html
-<div class="totp-management">
-  <div class="add-section collapsible">
-    <!-- Add new TOTP form -->
+<div class="totp-card">
+  <div class="totp-info">
+    <div class="service-name">Service Name</div>
+    <div class="totp-code">123 456</div>
   </div>
-  <div class="totp-list">
-    <!-- Sorted TOTP items -->
+  <div class="totp-tags">
+    <span class="tag">example.com</span>
+    <span class="tag">work</span>
+  </div>
+  <div class="totp-progress">
+    <div class="progress-bar"></div>
   </div>
 </div>
 ```
 
+Modal Header:
+```html
+<div class="modal-header">
+  <h2>Modal Title</h2>
+  <div class="modal-actions">
+    <button class="modal-button close-button">
+      <span class="button-icon">×</span>
+    </button>
+  </div>
+</div>
+```
 ### Theme System
 Structure:
 ```css

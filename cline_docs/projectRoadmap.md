@@ -11,10 +11,12 @@
 - [x] Separate TOTP management from settings
 - [x] Implement keyboard navigation for TOTP list
 - [x] Add focus management and accessibility
+- [x] Remove rounded corners for modern look
+- [ ] Redesign TOTP cards with improved layout
+- [ ] Add search functionality across names and tags
+- [ ] Modernize header icons and buttons
+- [ ] Enhance modal and form designs
 - [ ] Implement improved PIN input interface
-- [ ] Enhance UI with modern design patterns
-- [ ] Reorganize TOTP management layout
-- [ ] Add sort order functionality
 
 ## Key Features
 Current Features:
