@@ -1,0 +1,17 @@
+{
+  "name": "2face",
+  "version": "1.1.0",
+  "description": "A secure 2FA Chrome Extension with PIN protection",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write '2FACE/**/*.{js,css,html,json}'",
+    "lint": "eslint '2FACE/**/*.js'",
+    "lint:fix": "eslint --fix '2FACE/**/*.js'"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "prettier": "^3.1.1"
+  }
+}
