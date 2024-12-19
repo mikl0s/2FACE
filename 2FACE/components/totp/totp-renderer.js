@@ -1,11 +1,11 @@
-import jsOTP from '../../jsOTP.js';
+import '../../jsOTP.js';
 
 // TOTP list rendering functionality
 export function renderTotpList(secrets) {
   const totpList = document.getElementById('totpList');
   if (!totpList) {
-return;
-}
+    return;
+  }
 
   totpList.innerHTML = '';
 

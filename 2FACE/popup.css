@@ -6,9 +6,9 @@
   --hover-color: #e8e8e8;
   --surface-color: #ffffff;
   --primary-color: #1976d2;
-  --primary-light: #2196f3;
+  --primary-light: #1976d2;
   --error-color: #f44336;
-  --success-color: #4caf50;
+  --success-color: #1976d2;
   --shadow-color: rgba(0, 0, 0, 0.1);
 
   /* Dark theme */
@@ -17,8 +17,8 @@
   --border-color-dark: #333333;
   --hover-color-dark: #2a2a2a;
   --surface-color-dark: #1e1e1e;
-  --primary-color-dark: #90caf9;
-  --primary-light-dark: #64b5f6;
+  --primary-color-dark: #1976d2;
+  --primary-light-dark: #1976d2;
   --shadow-color-dark: rgba(0, 0, 0, 0.2);
 }
 
