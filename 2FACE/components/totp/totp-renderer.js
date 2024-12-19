@@ -1,10 +1,14 @@
+import jsOTP from '../../jsOTP.js';
+
 // TOTP list rendering functionality
 export function renderTotpList(secrets) {
   const totpList = document.getElementById('totpList');
-  if (!totpList) return;
+  if (!totpList) {
+return;
+}
 
   totpList.innerHTML = '';
-  
+
   if (!secrets || secrets.length === 0) {
     totpList.innerHTML = `
       <div class="empty-state">
@@ -12,45 +16,43 @@ export function renderTotpList(secrets) {
         <p>Click the "Add New Secret" button to get started.</p>
       </div>
     `;
-      return;
-    }
-  
-    // Setup keyboard navigation
-    const handleKeyboardNavigation = (e) => {
-      const cards = Array.from(totpList.querySelectorAll('.totp-card'));
-      const currentIndex = cards.findIndex(card => card === document.activeElement);
-      
-      if (e.key === 'Enter' && currentIndex !== -1) {
-        e.preventDefault();
-        // Trigger click on focused card
-        cards[currentIndex].click();
-      } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        let targetIndex;
-        
-        if (currentIndex === -1) {
-          // No card focused, start from top
-          targetIndex = 0;
-        } else if (e.key === 'ArrowDown') {
-          targetIndex = Math.min(currentIndex + 1, cards.length - 1);
-        } else {
-          targetIndex = Math.max(currentIndex - 1, 0);
-        }
-  
-        // Focus and scroll target into view
-        const targetCard = cards[targetIndex];
-        targetCard.focus();
-        targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    return;
+  }
+
+  // Setup keyboard navigation
+  const handleKeyboardNavigation = e => {
+    const cards = Array.from(totpList.querySelectorAll('.totp-card'));
+    const currentIndex = cards.findIndex(card => card === document.activeElement);
+
+    if (e.key === 'Enter' && currentIndex !== -1) {
+      e.preventDefault();
+      // Trigger click on focused card
+      cards[currentIndex].click();
+    } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      let targetIndex;
+
+      if (currentIndex === -1) {
+        // No card focused, start from top
+        targetIndex = 0;
+      } else if (e.key === 'ArrowDown') {
+        targetIndex = Math.min(currentIndex + 1, cards.length - 1);
+      } else {
+        targetIndex = Math.max(currentIndex - 1, 0);
       }
-    };
-  
-    // Remove any existing event listener and add the new one
-    document.removeEventListener('keydown', handleKeyboardNavigation);
-    document.addEventListener('keydown', handleKeyboardNavigation);
-  // Add the event listener
+
+      // Focus and scroll target into view
+      const targetCard = cards[targetIndex];
+      targetCard.focus();
+      targetCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  };
+
+  // Remove any existing event listener and add the new one
+  document.removeEventListener('keydown', handleKeyboardNavigation);
   document.addEventListener('keydown', handleKeyboardNavigation);
 
-  secrets.forEach((secret, index) => {
+  secrets.forEach(secret => {
     const totpCode = generateTotpCode(secret.secret);
     const timeRemaining = getTimeRemaining();
     const div = document.createElement('div');
@@ -72,7 +74,7 @@ export function renderTotpList(secrets) {
 
     const card = div.querySelector('.totp-card');
     card.tabIndex = 0; // Enable keyboard focus
-    
+
     // Function to copy code
     const copyCode = async () => {
       try {
@@ -80,7 +82,7 @@ export function renderTotpList(secrets) {
         const copyButton = div.querySelector('.copy-button');
         copyButton.classList.add('copied');
         copyButton.innerHTML = '<span class="button-icon">✓</span>';
-        
+
         // Close the popup after copying
         setTimeout(() => {
           window.close();
@@ -94,7 +96,7 @@ export function renderTotpList(secrets) {
     div.addEventListener('click', copyCode);
 
     // Keyboard handler for Enter/Space
-    card.addEventListener('keydown', (e) => {
+    card.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         copyCode();
@@ -113,11 +115,11 @@ function generateTotpCode(secret) {
   try {
     // Remove spaces and convert to uppercase
     const cleanSecret = secret.replace(/\s+/g, '').toUpperCase();
-    
+
     // Create TOTP object (jsOTP uses SHA1, 6 digits, and 30s interval by default)
     const totp = new jsOTP.totp();
     const token = totp.getOtp(cleanSecret);
-    
+
     // Ensure 6 digits with leading zeros
     return token.toString().padStart(6, '0');
   } catch (error) {
@@ -142,7 +144,7 @@ export function startTotpAutoRefresh() {
   setInterval(() => {
     const timeRemaining = getTimeRemaining();
     if (timeRemaining === 30) {
-      chrome.storage.sync.get(['secrets'], (result) => {
+      chrome.storage.sync.get(['secrets'], result => {
         if (result.secrets) {
           renderTotpList(result.secrets);
         }

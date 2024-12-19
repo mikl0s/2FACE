@@ -1,0 +1,9 @@
+# Third-party libraries
+2FACE/crypto.js
+2FACE/hmac-sha1.js
+2FACE/jsOTP.js
+2FACE/otplib.js
+
+# Build output
+dist/
+build/
