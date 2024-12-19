@@ -1,4 +1,4 @@
-# 2FACE
+# 2FACE - 2 Factor Authenticaton Chrome Extension
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Security](https://img.shields.io/badge/security-PIN%20protected-green.svg)](README.md#security-features)
 [![Platform](https://img.shields.io/badge/platform-Chrome-yellow.svg)](README.md#installation)
