@@ -27,7 +27,7 @@ class SecurityManager {
     try {
       await navigator.clipboard.writeText(text);
       console.log('Copied to clipboard:', text);
-      
+
       // Clear clipboard after timeout
       setTimeout(async () => {
         try {

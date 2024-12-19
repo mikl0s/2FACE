@@ -60,7 +60,8 @@
   background: var(--hover-color);
 }
 
-.pin-clear, .pin-enter {
+.pin-clear,
+.pin-enter {
   font-size: 14px;
 }
 

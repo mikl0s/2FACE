@@ -3,7 +3,7 @@ import { openTotpModal } from './components/totp/totp.js';
 import { renderTotpList, startTotpAutoRefresh } from './components/totp/totp-renderer.js';
 
 // Initialize theme mode
-chrome.storage.sync.get(['darkMode'], (result) => {
+chrome.storage.sync.get(['darkMode'], result => {
   if (result.darkMode) {
     document.body.classList.remove('light-mode');
   } else {
@@ -12,7 +12,7 @@ chrome.storage.sync.get(['darkMode'], (result) => {
 });
 
 // Initialize TOTP list
-chrome.storage.sync.get(['secrets'], (result) => {
+chrome.storage.sync.get(['secrets'], result => {
   if (result.secrets) {
     renderTotpList(result.secrets);
     startTotpAutoRefresh();
@@ -41,7 +41,7 @@ if (totpButton) {
 if (darkModeToggle) {
   // Update button text based on current mode
   darkModeToggle.textContent = document.body.classList.contains('light-mode') ? '🌙' : '🌞';
-  
+
   darkModeToggle.addEventListener('click', () => {
     console.log('Theme toggle clicked');
     const isLightMode = document.body.classList.contains('light-mode');
@@ -81,7 +81,7 @@ if (cancelAddButton) {
 if (addSecretButton && newUrlFilter) {
   const tags = new Set();
 
-  newUrlFilter.addEventListener('keydown', (e) => {
+  newUrlFilter.addEventListener('keydown', e => {
     if (e.key === 'Enter' && newUrlFilter.value.trim()) {
       e.preventDefault();
       const tag = newUrlFilter.value.trim();
@@ -99,7 +99,7 @@ if (addSecretButton && newUrlFilter) {
     }
   });
 
-  addSecretForm.querySelector('.tag-container').addEventListener('click', (e) => {
+  addSecretForm.querySelector('.tag-container').addEventListener('click', e => {
     if (e.target.classList.contains('tag-remove')) {
       const tag = e.target.dataset.tag;
       tags.delete(tag);
@@ -113,7 +113,7 @@ if (addSecretButton && newUrlFilter) {
     const urlFilters = Array.from(tags);
 
     if (name && secret) {
-      chrome.storage.sync.get(['secrets'], (result) => {
+      chrome.storage.sync.get(['secrets'], result => {
         const secrets = result.secrets || [];
         secrets.push({ name, secret, urlFilters });
         chrome.storage.sync.set({ secrets }, () => {

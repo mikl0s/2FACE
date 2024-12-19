@@ -12,7 +12,7 @@ class SettingsManager {
 
   // Load saved settings
   loadSettings() {
-    chrome.storage.sync.get(['darkMode'], (result) => {
+    chrome.storage.sync.get(['darkMode'], result => {
       this.darkMode = result.darkMode !== undefined ? result.darkMode : true;
       document.body.classList.toggle('dark-mode', this.darkMode);
     });
@@ -101,7 +101,7 @@ class SettingsManager {
     closeButton.addEventListener('click', () => this.closeSettingsModal());
 
     tabButtons.forEach(button => {
-      button.addEventListener('click', (e) => {
+      button.addEventListener('click', e => {
         const tabId = e.target.dataset.tab;
         this.switchTab(tabId);
       });
@@ -174,7 +174,7 @@ class SettingsManager {
     const nameInput = this.modal.querySelector('#newSecretName');
     const secretInput = this.modal.querySelector('#newSecret');
     const urlFilterInput = this.modal.querySelector('#newUrlFilter');
-    
+
     const name = nameInput.value.trim();
     const secret = secretInput.value.trim();
     const urlFilter = urlFilterInput.value.trim();
@@ -201,12 +201,14 @@ class SettingsManager {
   // Load secrets to modal
   loadSecretsToModal() {
     const secretList = this.modal.querySelector('#secretList');
-    if (!secretList) return;
+    if (!secretList) {
+      return;
+    }
 
-    chrome.storage.sync.get(['secrets'], (result) => {
+    chrome.storage.sync.get(['secrets'], result => {
       const secrets = result.secrets || [];
       secretList.innerHTML = '';
-      
+
       secrets.forEach((secret, index) => {
         const div = document.createElement('div');
         div.classList.add('secret-item');
@@ -231,11 +233,11 @@ class SettingsManager {
   // Set up secret management event listeners
   setupSecretEventListeners() {
     this.modal.querySelectorAll('.save-secret-button').forEach(button => {
-      button.addEventListener('click', (e) => this.handleSaveSecret(e));
+      button.addEventListener('click', e => this.handleSaveSecret(e));
     });
 
     this.modal.querySelectorAll('.remove-secret-button').forEach(button => {
-      button.addEventListener('click', (e) => this.handleRemoveSecret(e));
+      button.addEventListener('click', e => this.handleRemoveSecret(e));
     });
   }
 
@@ -248,7 +250,7 @@ class SettingsManager {
     const urlFilter = secretItem.querySelector('.url-filter').value.trim();
 
     if (name && secret) {
-      chrome.storage.sync.get(['secrets'], (result) => {
+      chrome.storage.sync.get(['secrets'], result => {
         const secrets = result.secrets || [];
         secrets[index] = { name, secret, urlFilter };
         chrome.storage.sync.set({ secrets }, () => {
