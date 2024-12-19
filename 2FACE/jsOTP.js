@@ -1,12 +1,12 @@
-(function(exports) {
+(function (exports) {
   var jsOTP = {};
 
-  jsOTP.totp = function() {
+  jsOTP.totp = function () {
     this.expiry = 30;
     this.length = 6;
     this.timeStep = 30;
 
-    this.getOtp = function(secret) {
+    this.getOtp = function (secret) {
       if (!secret) {
         throw 'Secret cannot be empty';
       }
@@ -17,21 +17,21 @@
       return this.generateOTP(hmac);
     };
 
-    this.getHMAC = function(secret, time) {
+    this.getHMAC = function (secret, time) {
       var wordArray = CryptoJS.enc.Base32.parse(secret.toUpperCase());
       var timeHex = this.leftpad(time.toString(16), 16, '0');
       var timeWordArray = CryptoJS.enc.Hex.parse(timeHex);
       return CryptoJS.HmacSHA1(timeWordArray, wordArray);
     };
 
-    this.generateOTP = function(hmac) {
+    this.generateOTP = function (hmac) {
       var hex = CryptoJS.enc.Hex.stringify(hmac);
       var offset = parseInt(hex.slice(-1), 16);
       var otp = (parseInt(hex.substr(offset * 2, 8), 16) & 0x7fffffff) + '';
       return otp.slice(-this.length);
     };
 
-    this.leftpad = function(str, len, pad) {
+    this.leftpad = function (str, len, pad) {
       if (len + 1 >= str.length) {
         str = Array(len + 1 - str.length).join(pad) + str;
       }
@@ -40,9 +40,9 @@
   };
 
   // CryptoJS Base32 encoding
-  (function() {
-    var Base32 = CryptoJS.enc.Base32 = {
-      stringify: function(wordArray) {
+  (function () {
+    var Base32 = (CryptoJS.enc.Base32 = {
+      stringify: function (wordArray) {
         var words = wordArray.words;
         var sigBytes = wordArray.sigBytes;
         var map = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
@@ -73,7 +73,7 @@
         return base32Chars.join('');
       },
 
-      parse: function(base32Str) {
+      parse: function (base32Str) {
         var base32StrLength = base32Str.length;
         var map = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
         var reverseMap = {};
@@ -101,15 +101,16 @@
 
           var bitMask = 0xff;
           while (bitsLength >= 8) {
-            words[nBytes >>> 2] |= ((bits >>> (bitsLength - 8)) & bitMask) << (24 - (nBytes % 4) * 8);
+            words[nBytes >>> 2] |=
+              ((bits >>> (bitsLength - 8)) & bitMask) << (24 - (nBytes % 4) * 8);
             nBytes++;
             bitsLength -= 8;
           }
         }
 
         return CryptoJS.lib.WordArray.create(words, nBytes);
-      }
-    };
+      },
+    });
   })();
 
   exports.jsOTP = jsOTP;
