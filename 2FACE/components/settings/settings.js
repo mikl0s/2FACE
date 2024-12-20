@@ -1,5 +1,6 @@
 import { createModal } from '../modal/modal.js';
 import { pinManager } from './pin-manager.js';
+import '../pin-input/pin-input.js';
 
 export function openSettingsModal() {
   const content = `
@@ -13,21 +14,21 @@ export function openSettingsModal() {
         <div class="pin-form">
           <div>
             <label>Current PIN</label>
-            <div id="currentPinContainer"></div>
+            <pin-input id="currentPin"></pin-input>
           </div>
           <div>
             <label>New PIN (4 digits)</label>
-            <div id="newPinContainer"></div>
+            <pin-input id="newPin"></pin-input>
           </div>
           <div>
             <label>Confirm PIN</label>
-            <div id="confirmPinContainer"></div>
+            <pin-input id="confirmPin"></pin-input>
           </div>
           <div class="pin-actions">
             <button id="setPinButton">Set PIN</button>
             <button id="removePinButton">Remove PIN</button>
           </div>
-          <div id="pinSettingsMessage" class="settings-message"></div>
+          <div id="pinSettingsMessage" class="pin-message"></div>
           <div class="pin-info">
             <p>PIN protection adds an extra layer of security to your TOTP codes.</p>
             <p>Your PIN will sync across all Chrome browsers where you're signed in.</p>
@@ -53,93 +54,93 @@ export function openSettingsModal() {
     setTimeout(() => modal.remove(), 300);
   });
 
-  // Initialize PIN input components
-  const currentPinContainer = modal.querySelector('#currentPinContainer');
-  const newPinContainer = modal.querySelector('#newPinContainer');
-  const confirmPinContainer = modal.querySelector('#confirmPinContainer');
-
-  // Create PIN inputs
-  const currentPinInput = pinManager.createPinInput();
-  const newPinInput = pinManager.createPinInput();
-  const confirmPinInput = pinManager.createPinInput();
-
-  currentPinContainer.appendChild(currentPinInput);
-  newPinContainer.appendChild(newPinInput);
-  confirmPinContainer.appendChild(confirmPinInput);
-
+  // Get PIN input elements
+  const currentPinInput = modal.querySelector('#currentPin');
+  const newPinInput = modal.querySelector('#newPin');
+  const confirmPinInput = modal.querySelector('#confirmPin');
   const setPinButton = modal.querySelector('#setPinButton');
   const removePinButton = modal.querySelector('#removePinButton');
   const pinMessage = modal.querySelector('#pinSettingsMessage');
   const toggleDarkMode = modal.querySelector('#toggleDarkMode');
 
+  const showMessage = (text, type = 'error') => {
+    pinMessage.textContent = text;
+    pinMessage.className = `pin-message ${type}`;
+  };
+
+  const clearInputs = () => {
+    currentPinInput.clear();
+    newPinInput.clear();
+    confirmPinInput.clear();
+  };
+
+  const closeModalWithSuccess = () => {
+    setTimeout(() => {
+      modal.classList.remove('show');
+      setTimeout(() => modal.remove(), 300);
+    }, 1000);
+  };
+
   setPinButton.addEventListener('click', async () => {
-    const currentPin = pinManager.getFullPin(currentPinInput);
-    const newPin = pinManager.getFullPin(newPinInput);
-    const confirmPin = pinManager.getFullPin(confirmPinInput);
+    // Clear previous error states
+    [currentPinInput, newPinInput, confirmPinInput].forEach(input => input.setError(false));
+
+    const currentPin = currentPinInput.value;
+    const newPin = newPinInput.value;
+    const confirmPin = confirmPinInput.value;
 
     if (!/^\d{4}$/.test(newPin)) {
-      pinMessage.textContent = 'PIN must be exactly 4 digits';
-      pinMessage.style.color = 'var(--error-color)';
+      showMessage('PIN must be exactly 4 digits');
+      newPinInput.setError();
       return;
     }
 
     if (newPin !== confirmPin) {
-      pinMessage.textContent = 'PINs do not match';
-      pinMessage.style.color = 'var(--error-color)';
+      showMessage('PINs do not match');
+      confirmPinInput.setError();
       return;
     }
 
     const verifyResult = await pinManager.verifyPin(currentPin);
     if (!verifyResult.success && verifyResult.locked) {
-      pinMessage.textContent = `Too many attempts. Locked for ${Math.ceil(verifyResult.remainingTime / 60)} minutes.`;
-      pinMessage.style.color = 'var(--error-color)';
+      showMessage(`Too many attempts. Locked for ${Math.ceil(verifyResult.remainingTime / 60)} minutes.`);
+      currentPinInput.setError();
       return;
     }
 
     chrome.storage.sync.get(['hashedPin'], async result => {
       if (!result.hashedPin || verifyResult.success) {
         await pinManager.setPin(newPin);
-        pinMessage.textContent = 'PIN set successfully';
-        pinMessage.style.color = 'var(--success-color)';
-        pinManager.clearPin(currentPinInput);
-        pinManager.clearPin(newPinInput);
-        pinManager.clearPin(confirmPinInput);
-        setTimeout(() => {
-          modal.classList.remove('show');
-          setTimeout(() => modal.remove(), 300);
-        }, 1000);
+        showMessage('PIN set successfully', 'success');
+        clearInputs();
+        closeModalWithSuccess();
       } else {
-        pinMessage.textContent = `Incorrect PIN. ${verifyResult.remaining} attempts remaining.`;
-        pinMessage.style.color = 'var(--error-color)';
+        showMessage(`Incorrect PIN. ${verifyResult.remaining} attempts remaining.`);
+        currentPinInput.setError();
       }
     });
   });
 
   removePinButton.addEventListener('click', async () => {
-    const currentPin = pinManager.getFullPin(currentPinInput);
+    currentPinInput.setError(false);
+    const currentPin = currentPinInput.value;
 
     const verifyResult = await pinManager.verifyPin(currentPin);
     if (!verifyResult.success && verifyResult.locked) {
-      pinMessage.textContent = `Too many attempts. Locked for ${Math.ceil(verifyResult.remainingTime / 60)} minutes.`;
-      pinMessage.style.color = 'var(--error-color)';
+      showMessage(`Too many attempts. Locked for ${Math.ceil(verifyResult.remainingTime / 60)} minutes.`);
+      currentPinInput.setError();
       return;
     }
 
     chrome.storage.sync.get(['hashedPin'], async result => {
       if (!result.hashedPin || verifyResult.success) {
         await pinManager.removePin();
-        pinMessage.textContent = 'PIN removed successfully';
-        pinMessage.style.color = 'var(--success-color)';
-        pinManager.clearPin(currentPinInput);
-        pinManager.clearPin(newPinInput);
-        pinManager.clearPin(confirmPinInput);
-        setTimeout(() => {
-          modal.classList.remove('show');
-          setTimeout(() => modal.remove(), 300);
-        }, 1000);
+        showMessage('PIN removed successfully', 'success');
+        clearInputs();
+        closeModalWithSuccess();
       } else {
-        pinMessage.textContent = `Incorrect PIN. ${verifyResult.remaining} attempts remaining.`;
-        pinMessage.style.color = 'var(--error-color)';
+        showMessage(`Incorrect PIN. ${verifyResult.remaining} attempts remaining.`);
+        currentPinInput.setError();
       }
     });
   });
