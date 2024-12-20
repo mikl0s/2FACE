@@ -1,20 +1,6 @@
 <div align="center">
 
-<svg width="180" height="180" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="64" cy="64" r="60" fill="#1976d2"/>
-  <path d="M44 40 L84 40 A24 24 0 1 1 84 88 L44 88 A24 24 0 1 1 44 40" 
-        fill="none" 
-        stroke="#ffffff" 
-        stroke-width="8"
-        stroke-linecap="round"/>
-  <circle cx="64" cy="64" r="8" fill="#ffffff"/>
-  <g stroke="#ffffff" stroke-width="4" stroke-linecap="round">
-    <line x1="64" y1="28" x2="64" y2="36"/>
-    <line x1="64" y1="92" x2="64" y2="100"/>
-    <line x1="28" y1="64" x2="36" y2="64"/>
-    <line x1="92" y1="64" x2="100" y2="64"/>
-  </g>
-</svg>
+<img src=".github/assets/logo.png" alt="2FACE Logo" width="180" height="180">
 
 # 2FACE
 
