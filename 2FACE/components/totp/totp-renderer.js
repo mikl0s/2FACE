@@ -1,7 +1,7 @@
 import '../../jsOTP.js';
 
 // TOTP list rendering functionality
-export function renderTotpList(secrets) {
+export function renderTotpList(secrets, searchQuery = '') {
   const totpList = document.getElementById('totpList');
   if (!totpList) {
     return;
@@ -14,6 +14,28 @@ export function renderTotpList(secrets) {
       <div class="empty-state">
         <p>No TOTP secrets added yet.</p>
         <p>Click the "Add New Secret" button to get started.</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Filter and sort secrets based on search query
+  const searchTerm = searchQuery ? searchQuery.trim().toLowerCase() : '';
+  const filteredSecrets = searchTerm
+    ? secrets.filter(secret => {
+        const name = secret.name.toLowerCase();
+        const tags = secret.urlFilters ? secret.urlFilters.join(' ').toLowerCase() : '';
+        return name.includes(searchTerm) || tags.includes(searchTerm);
+      })
+    : secrets;
+
+  // Sort filtered secrets to maintain consistent order
+  filteredSecrets.sort((a, b) => a.name.localeCompare(b.name));
+
+  if (filteredSecrets.length === 0) {
+    totpList.innerHTML = `
+      <div class="empty-state">
+        <p>No matching TOTP secrets found.</p>
       </div>
     `;
     return;
@@ -52,7 +74,8 @@ export function renderTotpList(secrets) {
   document.removeEventListener('keydown', handleKeyboardNavigation);
   document.addEventListener('keydown', handleKeyboardNavigation);
 
-  secrets.forEach(secret => {
+  // Render filtered secrets
+  filteredSecrets.forEach(secret => {
     const totpCode = generateTotpCode(secret.secret);
     const timeRemaining = getTimeRemaining();
     const div = document.createElement('div');
@@ -62,10 +85,12 @@ export function renderTotpList(secrets) {
         <div class="totp-info">
           <div class="service-name">${secret.name}</div>
           <div class="totp-code">${totpCode.replace(/(\d{3})(\d{3})/, '$1 $2')}</div>
+          ${secret.urlFilters && secret.urlFilters.length > 0 ? `
+            <div class="totp-tags">
+              ${secret.urlFilters.map(tag => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+          ` : ''}
         </div>
-        <button class="copy-button" title="Copy TOTP code">
-          <span class="button-icon">📋</span>
-        </button>
       </div>
       <div class="totp-progress">
         <div class="progress-bar" style="width: ${(timeRemaining / 30) * 100}%"></div>
@@ -79,9 +104,12 @@ export function renderTotpList(secrets) {
     const copyCode = async () => {
       try {
         await navigator.clipboard.writeText(totpCode);
-        const copyButton = div.querySelector('.copy-button');
-        copyButton.classList.add('copied');
-        copyButton.innerHTML = '<span class="button-icon">✓</span>';
+        card.classList.add('copied');
+        
+        // Reset copied state after animation
+        setTimeout(() => {
+          card.classList.remove('copied');
+        }, 200);
 
         // Close the popup after copying
         setTimeout(() => {
@@ -92,8 +120,8 @@ export function renderTotpList(secrets) {
       }
     };
 
-    // Click handler
-    div.addEventListener('click', copyCode);
+    // Click handler for the entire card
+    card.addEventListener('click', copyCode);
 
     // Keyboard handler for Enter/Space
     card.addEventListener('keydown', e => {
@@ -144,9 +172,13 @@ export function startTotpAutoRefresh() {
   setInterval(() => {
     const timeRemaining = getTimeRemaining();
     if (timeRemaining === 30) {
+      // Get current search query
+      const searchInput = document.getElementById('searchInput');
+      const currentSearch = searchInput ? searchInput.value : '';
+
       chrome.storage.sync.get(['secrets'], result => {
         if (result.secrets) {
-          renderTotpList(result.secrets);
+          renderTotpList(result.secrets, currentSearch);
         }
       });
     }

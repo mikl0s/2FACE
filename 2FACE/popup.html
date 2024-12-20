@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="icons/icon16.png" />
     <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="components/pin-input/pin-input.css" />
     <!-- Load dependencies first -->
     <script src="crypto.js"></script>
     <script src="hmac-sha1.js"></script>
@@ -15,9 +16,14 @@
   <body>
     <div class="container">
       <div class="header">
-        <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle Theme">🌙</button>
-        <button id="totpButton" class="totp-button" title="Manage TOTP Secrets">🏛️</button>
-        <button id="settingsButton" class="settings-button" title="Settings & PIN">⚙️</button>
+        <div class="search-container">
+          <input type="text" id="searchInput" class="search-input" placeholder="Search services and tags..." />
+        </div>
+        <div class="header-actions">
+          <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle Theme">🌙</button>
+          <button id="totpButton" class="totp-button" title="Manage TOTP Secrets">🏛️</button>
+          <button id="settingsButton" class="settings-button" title="Settings & PIN">⚙️</button>
+        </div>
       </div>
       <div id="totpList" role="list" aria-label="TOTP codes">
         <!-- TOTP list will be rendered here -->

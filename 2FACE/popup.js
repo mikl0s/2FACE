@@ -1,6 +1,16 @@
 import { openSettingsModal } from './components/settings/settings.js';
 import { openTotpModal } from './components/totp/totp.js';
 import { renderTotpList, startTotpAutoRefresh } from './components/totp/totp-renderer.js';
+import './components/pin-input/pin-input.js';
+import { PinVerify } from './components/pin-input/pin-verify.js';
+
+// Check if PIN verification is required
+const initializeApp = async () => {
+  if (await PinVerify.isRequired()) {
+    const pinVerify = new PinVerify();
+    document.body.appendChild(pinVerify);
+  }
+};
 
 // Initialize theme mode
 chrome.storage.sync.get(['darkMode'], result => {
@@ -11,13 +21,62 @@ chrome.storage.sync.get(['darkMode'], result => {
   }
 });
 
-// Initialize TOTP list
+// Initialize TOTP list and search functionality
+let currentSecrets = [];
+const searchInput = document.getElementById('searchInput');
+
+const updateList = (searchText = '') => {
+  renderTotpList(currentSecrets, searchText.trim());
+};
+
+// Load initial TOTP list
 chrome.storage.sync.get(['secrets'], result => {
   if (result.secrets) {
-    renderTotpList(result.secrets);
+    currentSecrets = result.secrets;
+    updateList();
     startTotpAutoRefresh();
+    
+    // Focus search input after loading
+    if (searchInput) {
+      searchInput.focus();
+    }
   }
 });
+
+// Set up search functionality
+if (searchInput) {
+  // Immediate search on each keystroke
+  searchInput.addEventListener('input', (e) => {
+    updateList(e.target.value);
+  });
+
+  // Handle keyboard navigation
+  searchInput.addEventListener('keydown', (e) => {
+    const totpList = document.getElementById('totpList');
+    const cards = Array.from(totpList.querySelectorAll('.totp-card'));
+    
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (cards.length > 0) {
+        cards[0].focus();
+      }
+    }
+  });
+
+  // Also handle paste events
+  searchInput.addEventListener('paste', (e) => {
+    // Use setTimeout to get the pasted value after the paste event
+    setTimeout(() => updateList(e.target.value), 0);
+  });
+
+  // Focus search input when / is pressed
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== searchInput) {
+      e.preventDefault();
+      searchInput.focus();
+    }
+  });
+}
 
 // Set up event listeners
 const settingsButton = document.getElementById('settingsButton');
