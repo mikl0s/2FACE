@@ -1,0 +1,252 @@
+/* TOTP Management Modal Styles */
+.modal-body {
+  background: var(--bg-color-dark);
+  color: var(--text-color-dark);
+}
+
+body.light-mode .modal-body {
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+.add-secret-form {
+  background: var(--surface-color-dark);
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+}
+
+body.light-mode .add-secret-form {
+  background: var(--surface-color);
+}
+
+.add-secret-form h3 {
+  color: var(--text-color-dark);
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+body.light-mode .add-secret-form h3 {
+  color: var(--text-color);
+}
+
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color-dark);
+  border-radius: 4px;
+  background: var(--surface-color-dark);
+  transition: all 0.2s ease;
+}
+
+body.light-mode .input-group {
+  border-color: var(--border-color);
+  background: var(--surface-color);
+}
+
+.input-group:focus-within {
+  border-color: var(--primary-color-dark);
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.input-icon {
+  font-size: 16px;
+  color: var(--text-color-dark);
+  opacity: 0.7;
+}
+
+body.light-mode .input-icon {
+  color: var(--text-color);
+}
+
+.input-group input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text-color-dark);
+  font-size: 14px;
+  padding: 4px;
+  outline: none;
+  width: 100%;
+}
+
+body.light-mode .input-group input {
+  color: var(--text-color);
+}
+
+.input-group input::placeholder {
+  color: var(--text-color-dark);
+  opacity: 0.5;
+}
+
+body.light-mode .input-group input::placeholder {
+  color: var(--text-color);
+  opacity: 0.5;
+}
+
+.tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 32px;
+  width: 100%;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: var(--hover-color-dark);
+  color: var(--text-color-dark);
+  border-radius: 4px;
+  font-size: 12px;
+  border: 1px solid var(--border-color-dark);
+  transition: all 0.2s ease;
+}
+
+body.light-mode .tag {
+  background: var(--hover-color);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+.tag-remove {
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+.tag-remove:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+body.light-mode .tag-remove:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--primary-color-dark);
+  color: var(--bg-color-dark);
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+body.light-mode .primary-button {
+  background: var(--primary-color);
+  color: white;
+}
+
+.primary-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px var(--shadow-color-dark);
+  filter: brightness(1.1);
+}
+
+body.light-mode .primary-button:hover {
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.button-icon {
+  font-size: 16px;
+}
+
+/* Secret List Styles */
+.secret-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.totp-item {
+  background: var(--surface-color-dark);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+body.light-mode .totp-item {
+  background: var(--surface-color);
+}
+
+.secret-fields {
+  padding: 16px;
+}
+
+.secret-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.secret-header h4 {
+  margin: 0;
+  color: var(--text-color-dark);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+body.light-mode .secret-header h4 {
+  color: var(--text-color);
+}
+
+.secret-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  padding: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.icon-button:hover {
+  opacity: 1;
+}
+
+.secret-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color-dark);
+}
+
+body.light-mode .secret-content {
+  border-color: var(--border-color);
+}
+
+.secret-content.hidden {
+  display: none;
+}
