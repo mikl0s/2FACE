@@ -22,28 +22,61 @@
 ### Storage & Security
 - **Chrome Storage API (`storage.sync`):**
   - Settings synchronization
-  - Hashed PIN storage
-  - TOTP secrets management
-  - Sort preferences
-- **CryptoJS:**
-  - HMAC-SHA1 for TOTP
-  - SHA-256 for PIN
+  - Encrypted data storage
+  - Cross-browser sync
+  - Storage schema:
+    ```javascript
+    {
+      hashedMasterPin: "sha256_of_master_pin",
+      hashedAccessPin: "sha256_of_access_pin",
+      encryptedMasterKey: "master_pin_encrypted_master_key",
+      secrets: [
+        {
+          name: "Service Name",
+          encryptedSecret: "master_key_encrypted_secret",
+          urlFilters: ["example.com"]
+        }
+      ]
+    }
+    ```
+
+- **Cryptography:**
+  - AES-256 for secret encryption
+  - HMAC-SHA1 for TOTP generation
+  - SHA-256 for PIN hashing
   - Base32 encoding/decoding
-  - Future: AES for backups
+  - Key derivation for master key encryption
 
 ### Security Features
-- **PIN Protection:**
-  - 4-digit separate input fields
-  - Auto-focus navigation
-  - Masked input display
-  - Current field highlighting
-  - Secure hashing
-  - Failed attempt tracking
+- **Two-PIN System:**
+  - **Master PIN (6-digit):**
+    * Used for encrypting/decrypting master key
+    * Required for adding/managing secrets
+    * SHA-256 hashing with salt
+    * Higher security for critical operations
+  - **Access PIN (4-digit):**
+    * Daily access to view TOTP codes
+    * 3 attempts before lockout
+    * 5-minute lockout duration
+    * Quick access for frequent use
+  - **Key Management:**
+    * Random master key for secret encryption
+    * Master key encrypted with Master PIN
+    * Secrets encrypted with master key
+    * PIN changes don't affect encrypted secrets
+
 - **Access Control:**
-  - Session management
-  - Automatic logout
-  - Clipboard security
-  - Input validation
+  - Session management (5-minute timeout)
+  - Automatic logout on inactivity
+  - Clipboard auto-clear (30 seconds)
+  - Input validation and sanitization
+  - Activity tracking (mouse, keyboard, touch)
+
+- **Storage Security:**
+  - Chrome sync storage encryption
+  - AES-256 for secret encryption
+  - Encrypted master key storage
+  - Secure secret backup/export
 
 ### UI/UX Features
 - **PIN Input System:**

@@ -1,3 +1,5 @@
+import '../../core/crypto.js';
+
 // PIN management utilities
 export const pinManager = {
   // Maximum failed attempts before lockout

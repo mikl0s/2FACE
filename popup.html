@@ -4,14 +4,15 @@
     <title>2FACE</title>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="icons/icon16.png" />
-    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="popup/popup.css" />
     <link rel="stylesheet" href="components/pin-input/pin-input.css" />
-    <!-- Load dependencies first -->
-    <script src="crypto.js"></script>
-    <script src="hmac-sha1.js"></script>
-    <script src="jsOTP.js"></script>
+    <link rel="stylesheet" href="components/totp/totp-modal.css" />
+    <!-- Load core dependencies first -->
+    <script src="core/crypto.js"></script>
+    <script src="core/hmac-sha1.js"></script>
+    <script src="core/jsOTP.js"></script>
     <!-- Then load our modular code -->
-    <script src="popup.js" type="module"></script>
+    <script src="popup/popup.js" type="module"></script>
   </head>
   <body>
     <div class="container">

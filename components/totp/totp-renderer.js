@@ -1,4 +1,4 @@
-import '../../jsOTP.js';
+import '../../core/jsOTP.js';
 
 // TOTP list rendering functionality
 export function renderTotpList(secrets, searchQuery = '') {

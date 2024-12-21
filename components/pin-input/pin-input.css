@@ -9,20 +9,31 @@
 .pin-digit {
   width: 40px;
   height: 48px;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--border-color-dark);
   border-radius: 4px;
   font-size: 24px;
   text-align: center;
-  background: var(--bg-color);
-  color: var(--text-color);
+  background: var(--bg-color-dark);
+  color: var(--text-color-dark);
   transition: all 0.2s ease;
   outline: none;
   caret-color: transparent;
 }
 
+body.light-mode .pin-digit {
+  border-color: var(--border-color);
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
 .pin-digit:focus {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 2px var(--accent-color-transparent);
+  border-color: var(--primary-color-dark);
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+body.light-mode .pin-digit:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
 }
 
 /* Hide number spinner buttons */
@@ -30,18 +41,6 @@
 .pin-digit::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
-}
-
-/* Dark mode styles */
-.dark-mode .pin-digit {
-  background: var(--bg-color-dark);
-  border-color: var(--border-color-dark);
-  color: var(--text-color-dark);
-}
-
-.dark-mode .pin-digit:focus {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 2px var(--accent-color-transparent);
 }
 
 /* Error state */
@@ -72,14 +71,23 @@
   min-height: 20px;
   margin: 8px 0;
   transition: color 0.2s ease;
+  color: var(--text-color-dark);
+  opacity: 0.8;
+}
+
+body.light-mode .pin-message {
+  color: var(--text-color);
+  opacity: 0.8;
 }
 
 .pin-message.error {
   color: var(--error-color);
+  opacity: 1;
 }
 
 .pin-message.success {
   color: var(--success-color);
+  opacity: 1;
 }
 
 /* PIN form layout */
@@ -95,11 +103,13 @@
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
-  color: var(--text-color);
+  color: var(--text-color-dark);
+  opacity: 0.9;
 }
 
-.dark-mode .pin-form label {
-  color: var(--text-color-dark);
+body.light-mode .pin-form label {
+  color: var(--text-color);
+  opacity: 0.9;
 }
 
 .pin-actions {
@@ -110,30 +120,35 @@
 }
 
 .pin-actions button {
-  padding: 8px 16px;
+  padding: 12px 24px;
   border: none;
   border-radius: 4px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: var(--accent-color);
+}
+
+#setPinButton {
+  background: var(--primary-color-dark);
+  color: white;
+}
+
+#removePinButton {
+  background: var(--error-color);
   color: white;
 }
 
 .pin-actions button:hover {
-  background: var(--accent-color-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px var(--shadow-color-dark);
+}
+
+body.light-mode .pin-actions button:hover {
+  box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 .pin-actions button:focus {
   outline: none;
-  box-shadow: 0 0 0 2px var(--accent-color-transparent);
-}
-
-.dark-mode .pin-actions button {
-  background: var(--accent-color-dark);
-}
-
-.dark-mode .pin-actions button:hover {
-  background: var(--accent-color-dark-hover);
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
 }
