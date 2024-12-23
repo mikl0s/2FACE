@@ -19,6 +19,7 @@ export class PinVerify extends HTMLElement {
         <pin-input id="verifyPin"></pin-input>
         <div class="pin-message"></div>
       </div>
+      <div class="pin-verified">✓</div>
     `;
   }
 
@@ -37,14 +38,26 @@ export class PinVerify extends HTMLElement {
         
         if (verifyResult.success) {
           showMessage('PIN verified', 'success');
-          // Dispatch pinverified event
-          this.dispatchEvent(new CustomEvent('pinverified', {
-            bubbles: true,
-            composed: true
-          }));
+          
+          // Show success checkmark
+          const checkmark = this.querySelector('.pin-verified');
+          checkmark.classList.add('show');
+          
+          // Start fade out animation
           setTimeout(() => {
-            this.remove();
-          }, 500);
+            this.classList.add('fade-out');
+            
+            // Dispatch pinverified event
+            this.dispatchEvent(new CustomEvent('pinverified', {
+              bubbles: true,
+              composed: true
+            }));
+            
+            // Remove component after animation
+            setTimeout(() => {
+              this.remove();
+            }, 300); // Match transition duration
+          }, 600); // Give time for checkmark animation
         } else if (verifyResult.locked) {
           showMessage(`Too many attempts. Locked for ${Math.ceil(verifyResult.remainingTime / 60)} minutes.`);
           pinInput.setError();

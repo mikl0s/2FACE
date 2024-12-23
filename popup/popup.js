@@ -4,14 +4,6 @@ import { renderTotpList, startTotpAutoRefresh } from '../components/totp/totp-re
 import '../components/pin-input/pin-input.js';
 import { PinVerify } from '../components/pin-input/pin-verify.js';
 
-// Check if PIN verification is required
-const initializeApp = async () => {
-  if (await PinVerify.isRequired()) {
-    const pinVerify = new PinVerify();
-    document.body.appendChild(pinVerify);
-  }
-};
-
 // Initialize theme mode
 chrome.storage.sync.get(['darkMode'], result => {
   if (result.darkMode) {
@@ -29,19 +21,38 @@ const updateList = (searchText = '') => {
   renderTotpList(currentSecrets, searchText.trim());
 };
 
-// Load initial TOTP list
-chrome.storage.sync.get(['secrets'], result => {
-  if (result.secrets) {
-    currentSecrets = result.secrets;
-    updateList();
-    startTotpAutoRefresh();
-    
-    // Focus search input after loading
-    if (searchInput) {
-      searchInput.focus();
+// Load initial TOTP list only after PIN verification if required
+const loadTotpList = () => {
+  chrome.storage.sync.get(['secrets'], result => {
+    if (result.secrets) {
+      currentSecrets = result.secrets;
+      updateList();
+      startTotpAutoRefresh();
+      
+      // Focus search input after loading
+      if (searchInput) {
+        searchInput.focus();
+      }
     }
+  });
+};
+
+// Check if PIN verification is required before loading TOTPs
+const initializeApp = async () => {
+  if (await PinVerify.isRequired()) {
+    const pinVerify = new PinVerify();
+    // Add event listener for successful verification
+    pinVerify.addEventListener('pinverified', () => {
+      loadTotpList();
+    });
+    document.body.appendChild(pinVerify);
+  } else {
+    loadTotpList();
   }
-});
+};
+
+// Start the app
+initializeApp();
 
 // Set up search functionality
 if (searchInput) {

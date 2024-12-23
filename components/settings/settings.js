@@ -1,6 +1,7 @@
 import { createModal } from '../modal/modal.js';
 import { pinManager } from './pin-manager.js';
 import '../pin-input/pin-input.js';
+import { PinVerify } from '../pin-input/pin-verify.js';
 
 export function openSettingsModal() {
   const content = `
