@@ -11,6 +11,8 @@ export class PinInput extends HTMLElement {
     this.classList.add('pin-input-container');
     this.createDigitInputs();
     this.setupEventListeners();
+    // Focus first input when component is mounted
+    this.focus();
   }
 
   createDigitInputs() {
