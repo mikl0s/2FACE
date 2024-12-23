@@ -31,11 +31,78 @@ body.light-mode .pin-container {
   text-align: center;
   transform: translateY(0);
   transition: all 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 300px;
 }
 
 body.light-mode .pin-input-container {
   background: var(--surface-color);
   box-shadow: 0 4px 16px var(--shadow-color);
+}
+
+.pin-header {
+  margin-bottom: 8px;
+}
+
+.pin-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--text-color-dark);
+}
+
+.pin-input-wrapper {
+  padding: 8px 0;
+}
+
+.pin-footer {
+  margin-top: 8px;
+  min-height: 24px;
+}
+
+/* PIN Timer Setting Styles */
+.pin-timer-setting {
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.pin-timer-setting label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-color-dark);
+  font-weight: 500;
+}
+
+.pin-timer-select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--border-color-dark);
+  background: var(--surface-color-dark);
+  color: var(--text-color-dark);
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.setting-description {
+  font-size: 12px;
+  color: var(--text-color-dark);
+  opacity: 0.7;
+  margin: 4px 0;
+}
+
+body.light-mode .pin-header h2,
+body.light-mode .pin-timer-setting label,
+body.light-mode .pin-timer-select,
+body.light-mode .setting-description {
+  color: var(--text-color);
+}
+
+body.light-mode .pin-timer-select {
+  background: var(--surface-color);
+  border-color: var(--border-color);
 }
 
 .pin-container.fade-out .pin-input-container {

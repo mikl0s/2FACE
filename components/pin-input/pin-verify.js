@@ -15,9 +15,15 @@ export class PinVerify extends HTMLElement {
   render() {
     this.innerHTML = `
       <div class="pin-input-container">
-        <h2>Enter PIN</h2>
-        <pin-input id="verifyPin"></pin-input>
-        <div class="pin-message"></div>
+        <div class="pin-header">
+          <h2>Enter PIN</h2>
+        </div>
+        <div class="pin-input-wrapper">
+          <pin-input id="verifyPin"></pin-input>
+        </div>
+        <div class="pin-footer">
+          <div class="pin-message"></div>
+        </div>
       </div>
       <div class="pin-verified">✓</div>
     `;
@@ -37,6 +43,9 @@ export class PinVerify extends HTMLElement {
         const verifyResult = await pinManager.verifyPin(pin);
         
         if (verifyResult.success) {
+          // Record successful entry time
+          await PinVerify.recordSuccessfulEntry();
+          
           showMessage('PIN verified', 'success');
           
           // Show success checkmark
@@ -98,10 +107,31 @@ export class PinVerify extends HTMLElement {
   // Public method to check if PIN is required
   static async isRequired() {
     return new Promise(resolve => {
-      chrome.storage.sync.get(['hashedPin'], result => {
-        resolve(!!result.hashedPin);
+      chrome.storage.sync.get(['hashedPin', 'pinReentryMinutes', 'lastPinEntry'], result => {
+        const hasPin = !!result.hashedPin;
+        if (!hasPin) {
+          resolve(false);
+          return;
+        }
+
+        const reentryMinutes = result.pinReentryMinutes || 0;
+        if (reentryMinutes === 0) {
+          resolve(true);
+          return;
+        }
+
+        const lastEntry = result.lastPinEntry || 0;
+        const now = Date.now();
+        const timeSinceLastEntry = (now - lastEntry) / (1000 * 60); // Convert to minutes
+
+        resolve(timeSinceLastEntry >= reentryMinutes);
       });
     });
+  }
+
+  // Store the time of successful PIN entry
+  static async recordSuccessfulEntry() {
+    await chrome.storage.sync.set({ lastPinEntry: Date.now() });
   }
 }
 

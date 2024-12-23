@@ -12,7 +12,22 @@ export function openSettingsModal() {
     <div class="modal-body">
       <div class="settings-section">
         <h3>PIN Protection</h3>
-        <div class="pin-form">
+        <div class="pin-settings">
+          <div class="pin-timer-setting">
+            <label for="pinTimer">PIN Re-entry Timer (minutes)</label>
+            <select id="pinTimer" class="pin-timer-select">
+              <option value="0">Always require PIN</option>
+              <option value="5">5 minutes</option>
+              <option value="10">10 minutes</option>
+              <option value="15">15 minutes</option>
+              <option value="30">30 minutes</option>
+              <option value="60">1 hour</option>
+            </select>
+            <p class="setting-description">
+              If you've entered your PIN within this time, you won't need to enter it again.
+            </p>
+          </div>
+          <div class="pin-form">
           <div>
             <label>Current PIN</label>
             <pin-input id="currentPin"></pin-input>
@@ -37,16 +52,22 @@ export function openSettingsModal() {
           </div>
         </div>
       </div>
-      <div class="settings-section">
-        <h3>Theme</h3>
-        <button id="toggleDarkMode" class="theme-button">
-          ${document.body.classList.contains('light-mode') ? '🌙 Switch to Dark Mode' : '🌞 Switch to Light Mode'}
-        </button>
-      </div>
     </div>
   `;
 
   const modal = createModal(content);
+
+  // Set up PIN timer
+  const pinTimer = modal.querySelector('#pinTimer');
+  chrome.storage.sync.get(['pinReentryMinutes'], result => {
+    const minutes = result.pinReentryMinutes || 0;
+    pinTimer.value = minutes.toString();
+  });
+
+  pinTimer.addEventListener('change', () => {
+    const minutes = parseInt(pinTimer.value, 10);
+    chrome.storage.sync.set({ pinReentryMinutes: minutes });
+  });
 
   // Set up close button
   const closeButton = modal.querySelector('.close-button');
