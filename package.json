@@ -1,6 +1,6 @@
 {
   "name": "2face",
-  "version": "1.2.0",
+  "version": "0.1.1",
   "description": "A secure 2FA Chrome Extension with PIN protection",
   "private": true,
   "scripts": {
