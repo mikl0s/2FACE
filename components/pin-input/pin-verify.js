@@ -37,7 +37,11 @@ export class PinVerify extends HTMLElement {
         
         if (verifyResult.success) {
           showMessage('PIN verified', 'success');
-          // Remove the overlay after a brief delay
+          // Dispatch pinverified event
+          this.dispatchEvent(new CustomEvent('pinverified', {
+            bubbles: true,
+            composed: true
+          }));
           setTimeout(() => {
             this.remove();
           }, 500);
@@ -45,12 +49,34 @@ export class PinVerify extends HTMLElement {
           showMessage(`Too many attempts. Locked for ${Math.ceil(verifyResult.remainingTime / 60)} minutes.`);
           pinInput.setError();
         } else {
-          showMessage(`Incorrect PIN. ${verifyResult.remaining} attempts remaining.`);
-          pinInput.setError();
-          setTimeout(() => {
-            pinInput.setError(false);
-            pinInput.clear();
-          }, 1000);
+          if (verifyResult.remaining === 0) {
+            // On last failed attempt, remove PIN and show notification
+            pinManager.removePin().then(() => {
+              const notification = document.createElement('div');
+              notification.className = 'pin-notification';
+              notification.innerHTML = `
+                <div class="pin-notification-content">
+                  <h3>PIN Verification Failed</h3>
+                  <p>PIN has been removed due to too many failed attempts.</p>
+                  <button class="pin-notification-button">OK</button>
+                </div>
+              `;
+              
+              notification.querySelector('button').addEventListener('click', () => {
+                notification.remove();
+                this.remove();
+              });
+              
+              document.body.appendChild(notification);
+            });
+          } else {
+            showMessage(`Incorrect PIN. ${verifyResult.remaining} attempts remaining.`);
+            pinInput.setError();
+            setTimeout(() => {
+              pinInput.setError(false);
+              pinInput.clear();
+            }, 1000);
+          }
         }
       }
     });
