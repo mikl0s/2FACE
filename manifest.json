@@ -3,6 +3,8 @@
   "name": "2FACE",
   "version": "1.1",
   "description": "A secure 2FA Chrome Extension with PIN protection",
+  "author": "Mikkel Georgsen / Dataløs",
+  "homepage_url": "https://datalos.dk",
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -16,7 +18,16 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "permissions": ["storage", "clipboardWrite", "clipboardRead"],
+  "permissions": ["storage", "clipboardWrite", "clipboardRead", "hid", "commands"],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+2",
+        "mac": "Command+Shift+2"
+      },
+      "description": "Open 2FACE"
+    }
+  },
   "content_security_policy": {
     "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
   }

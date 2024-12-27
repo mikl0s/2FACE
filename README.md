@@ -2,9 +2,9 @@
 
 <img src=".github/assets/logo.png" alt="2FACE Logo" width="180" height="180">
 
-# 2FACE
+# 2FACE (2FA Chrome Extension)
 
-A modern, secure Chrome extension for managing Time-Based One-Time Passwords (TOTP).
+A modern, secure Chrome extension for managing Time-Based One-Time Passwords (TOTP) like Google Authenticator etc.
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Security](https://img.shields.io/badge/security-PIN%20protected-green.svg)](README.md#security-features)
@@ -26,6 +26,16 @@ A modern, secure Chrome extension for managing Time-Based One-Time Passwords (TO
   - 4-digit PIN security
   - Auto-logout
   - Brute force protection
+- 🛡️ **HID Protection**
+  - USB device monitoring
+  - Automatic code hiding
+  - Device trust management
+  - Monitors device vendor/product IDs
+  - Tracks device connection/disconnection events
+- ⌨️ **Quick Access**
+  - Customizable keyboard shortcuts
+  - Default: Ctrl+Shift+2 (Win/Linux)
+  - Default: Command+Shift+2 (Mac)
 - 🎨 **Modern Interface**
   - Clean, minimal design
   - Dark/Light themes
@@ -71,6 +81,14 @@ A modern, secure Chrome extension for managing Time-Based One-Time Passwords (TO
 
 ## 📖 Usage
 
+### Quick Access
+1. Use default shortcut (Ctrl+Shift+2 or Command+Shift+2)
+2. Or customize in Chrome's extension shortcuts
+   ```
+   chrome://extensions/shortcuts
+   ```
+3. Access from anywhere in the browser
+
 ### First Time Setup
 1. Click the 2FACE icon in your browser toolbar
 2. Set a 4-digit PIN for security
@@ -92,6 +110,75 @@ A modern, secure Chrome extension for managing Time-Based One-Time Passwords (TO
 - Click 🌙 to toggle theme
 
 ## 🔐 Security Features
+
+### HID Device Protection
+- **What it does:**
+  - Monitors USB Human Interface Devices (HID)
+  - Detects unauthorized keyboards/mice
+  - Automatically hides TOTP codes when unknown devices are connected
+  - Prevents USB-based malware attacks
+  - Monitors device vendor/product IDs
+  - Tracks device connection/disconnection events
+
+- **Why it matters:**
+  - USB devices can inject keystrokes
+  - Malicious devices can simulate user input
+  - Common attack vector for credential theft
+  - Protection against "Rubber Ducky" style attacks
+  - Defends against BadUSB attacks
+  - Prevents automated form submission
+
+- **How it works:**
+  - Maintains list of trusted devices
+  - Real-time USB device monitoring
+  - Instant response to device changes
+  - Simple device trust management
+  - Uses Chrome's HID API for detection
+  - Stores device fingerprints securely
+  - Syncs trusted devices across browsers
+
+- **Technical Implementation:**
+  - Device identification via vendor/product IDs
+  - Secure storage of trusted device list
+  - Event-based monitoring system
+  - Chrome storage sync integration
+  - Permission-based device access
+  - Non-blocking async operations
+  - Fallback mechanisms for API failures
+
+- **Common Attack Vectors Prevented:**
+  - USB Rubber Ducky attacks
+  - BadUSB firmware exploits
+  - HID spoofing attempts
+  - Automated form submission
+  - Keystroke injection
+  - Screen capture via virtual devices
+  - Clipboard manipulation
+
+- **Troubleshooting:**
+  1. HID Permission Issues:
+     - Ensure HID permissions are granted
+     - Check Chrome://extensions
+     - Re-enable if necessary
+     - Verify device connections
+
+  2. Device Trust Management:
+     - Use "Trust Current Devices" for initial setup
+     - Remove/reconnect problematic devices
+     - Clear trusted devices if needed
+     - Verify device recognition
+
+  3. False Positives:
+     - Check for USB hub interference
+     - Verify device firmware updates
+     - Update Chrome if needed
+     - Review device compatibility
+
+  4. Performance Considerations:
+     - Minimal CPU/memory impact
+     - No noticeable latency
+     - Efficient event handling
+     - Battery-friendly monitoring
 
 ### PIN Protection
 - 4-digit PIN requirement
@@ -152,6 +239,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-Made with ❤️ by [mikl0s](https://github.com/mikl0s)
+Made with ❤️ by [Mikkel Georgsen](https://github.com/mikl0s) / [Dataløs](https://datalos.dk)
+
+Copyright © 2024 Mikkel Georgsen / Dataløs. All rights reserved.
 
 </div>

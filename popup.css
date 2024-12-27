@@ -1,0 +1,44 @@
+.hid-warning {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--bg-warning);
+  border: 1px solid var(--border-warning);
+  border-radius: 8px;
+  padding: 1.5rem;
+  max-width: 80%;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.warning-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.warning-message h3 {
+  color: var(--text-warning);
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.warning-message p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Add these CSS variables to your theme */
+:root {
+  --bg-warning: #fff3cd;
+  --border-warning: #ffeeba;
+  --text-warning: #856404;
+}
+
+body.dark-mode {
+  --bg-warning: #2c2a1c;
+  --border-warning: #443e1d;
+  --text-warning: #ffd866;
+} 

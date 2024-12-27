@@ -2,6 +2,7 @@ import { createModal } from '../modal/modal.js';
 import { pinManager } from './pin-manager.js';
 import '../pin-input/pin-input.js';
 import { PinVerify } from '../pin-input/pin-verify.js';
+import { hidMonitor } from '../../core/hid_monitor.js';
 
 export function openSettingsModal() {
   const content = `
@@ -10,6 +11,45 @@ export function openSettingsModal() {
       <button class="close-button" title="Close">✕</button>
     </div>
     <div class="modal-body">
+      <div class="settings-section">
+        <h3>Security Settings</h3>
+        <div class="hid-settings">
+          <div class="setting-row">
+            <div class="setting-label">
+              <label for="hidMonitoring">HID Device Protection</label>
+              <p class="setting-description">
+                Disable TOTP display when unknown USB devices are detected
+              </p>
+            </div>
+            <div class="setting-control">
+              <label class="switch">
+                <input type="checkbox" id="hidMonitoring">
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <button id="trustDevices" class="secondary-button">Trust Current Devices</button>
+            <p class="setting-description">
+              Mark all currently connected devices as trusted
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3>Keyboard Shortcuts</h3>
+        <div class="setting-row">
+          <div class="setting-label">
+            <label>Quick Access Shortcut</label>
+            <p class="setting-description">
+              Default: Ctrl+Shift+2 (Windows/Linux) or Command+Shift+2 (Mac)
+            </p>
+          </div>
+          <div class="setting-control">
+            <button id="configureShortcuts" class="secondary-button">Configure</button>
+          </div>
+        </div>
+      </div>
       <div class="settings-section">
         <h3>PIN Protection</h3>
         <div class="pin-settings">
@@ -56,6 +96,52 @@ export function openSettingsModal() {
   `;
 
   const modal = createModal(content);
+
+  // Set up HID monitoring
+  const hidMonitoringToggle = modal.querySelector('#hidMonitoring');
+  const trustDevicesButton = modal.querySelector('#trustDevices');
+
+  // Initialize HID monitoring state
+  chrome.storage.sync.get(['hidMonitoringEnabled'], result => {
+    hidMonitoringToggle.checked = result.hidMonitoringEnabled || false;
+  });
+
+  // Handle HID monitoring toggle
+  hidMonitoringToggle.addEventListener('change', async () => {
+    if (hidMonitoringToggle.checked) {
+      try {
+        // Request HID device permission
+        await navigator.hid.requestDevice({
+          filters: [] // Empty array to see all devices
+        });
+        await hidMonitor.enable();
+      } catch (error) {
+        console.error('Failed to enable HID monitoring:', error);
+        hidMonitoringToggle.checked = false;
+      }
+    } else {
+      await hidMonitor.disable();
+    }
+  });
+
+  // Handle trust devices button
+  trustDevicesButton.addEventListener('click', async () => {
+    try {
+      await hidMonitor.trustCurrentDevices();
+      showMessage('Current devices trusted successfully', 'success');
+    } catch (error) {
+      console.error('Failed to trust devices:', error);
+      showMessage('Failed to trust devices', 'error');
+    }
+  });
+
+  // Handle configure shortcuts button
+  const configureShortcuts = modal.querySelector('#configureShortcuts');
+  configureShortcuts.addEventListener('click', () => {
+    chrome.tabs.create({
+      url: 'chrome://extensions/shortcuts',
+    });
+  });
 
   // Set up PIN timer
   const pinTimer = modal.querySelector('#pinTimer');
